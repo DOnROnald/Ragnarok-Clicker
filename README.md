@@ -31,36 +31,7 @@ Latest version 0.11 released on 13.8.2016
 **5.** open the donron-ragnarok-clicker-bot.ahk with autohotkey
 
 This should do it the bot is ready to rumble.
-But to be sure you should follow the following steps to make sure
-alll the clicks are at the right coordinates.
 
-### Different windowsize
-ATTENTION!  if you change the size of the ragnarok Clicker window you need to
-			configure the bot further.
-
-**1.**  Start ragnarok Clicker and reshape it to the size you want it, 
-		BUT it has to be to a size WITHOUT black bars in the window.
-
-**2.** Start the bot
-
-**3.** right click on the green 'H' in your taskbar. choose windowspy
-		THis opens a nifty window which shows stats about the ACTIVE
-		window below the cursor.  So left click on Ragnarok Clicker.
-
-**4.** Next to 'Client' are the attributes of your Ragnarok Clicker.
-		note down the width 'w' and the hight 'h'
-
-**5.** Go to the script in your explorer and open it with a texteditor.
-		can be the standard windows editor but i recommend using 'notepad++'.
-
-**6.** Search for the 2 Variables 'global myW' and 'global myH'
-		change the values to the values you got via windowspy.
-
-**7.** save the changes.
-
-**8.** right click on the green 'H' in your taskbar and choose 'Reload this Script'
-
-**9.** you are good to go.
 
 ## Requirements
 
