@@ -102,7 +102,7 @@ global title := "Ragnarok Clicker" ; steam window name
 global stop := false
 
 
-global lvlupDelay := 5			; default value=5. lower/raise this value to change starting value
+global lvlupDelay := 2			; default value=2. raise this value to change starting value
 global i := 0 ; MainLoop
 global k := 0 ; Transcendcheck
 global ElapsedTime := 0
