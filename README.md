@@ -23,7 +23,7 @@ Latest version 0.11 released on 13.8.2016
 
 **2.** Download and install latest version of [AutoHotkey][]
 
-**3.** download latest bot version as a zip file.(Green button on the right[clone or download])
+**3.** download latest bot version as a zip file.(green button on the right[clone or download])
 
 **4.** extract the zip file to your desire location.
 
