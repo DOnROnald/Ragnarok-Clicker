@@ -5,7 +5,7 @@
 ; Published under MIT License
 ; Thanks to FlyinPoulpus. I used his Clicker Heroes Bot as template
 ; and inspiration.
-; Thanks to the beta testers:
+; Thanks to the beta testers: I had none, because i dont have friends because i play idle games all day long.
 ;
 
 

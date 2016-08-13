@@ -30,8 +30,9 @@ Latest version 0.11 released on 13.8.2016
 
 **5.** open the donron-ragnarok-clicker-bot.ahk with autohotkey
 
-This should do it the bot is ready to rumble refere to the hotkey section for
-infos how to influence the bot.
+This should do it the bot is ready to rumble.
+But to be sure you should follow the following steps to make sure
+alll the clicks are at the right coordinates.
 
 ### Different windowsize
 ATTENTION!  if you change the size of the ragnarok Clicker window you need to
@@ -74,7 +75,7 @@ button unlocked
  * Automatically levels heroes(frequenzy adjustable)
  * Automatically uses ZenySkills and mammonite
  * Automatically accept equiment drop from mob
- * AutoProgress: ONLY FUNTIONAL IF Ragnarok Clicker WINDOW IS IN FOCUS!
+ * AutoProgress: ONLY FUNCTIONAL IF Ragnarok Clicker WINDOW IS IN FOCUS!
 					checks every so often if you are in progressmode if not
 					it activates progressmode.(For this to work )
 					
@@ -106,10 +107,12 @@ button unlocked
 	if autoProgression is enabled and another window is open, the bot will search in
 	a small square in this window for the true RGB red colour. if found the script will send
 	the following actions to the active window.
+* the automatic heroe lvling levels some heroes more often than other. i try to
+	remedy this.
 
 ## Changelog
 
-*13.8.16: Realase Version:
+*13.8.16: Realase Version: 0.11
 
 ##To Do
 - useskills toggle
