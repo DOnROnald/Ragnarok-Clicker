@@ -4,8 +4,12 @@ AHK BOT Active-Build for Ragnarok Clicker
 ## Overview
 
 * [How-to install](#how-to-install)
+** [Different windowsize](#different-windowsize)
 * [Features](#features)
 * [Known issues](#known-issues)
+* [Changelog](#changelog)
+* [To Do](#to-do)
+* [Maybe future features](#maybe-future-features)
 
 ## How-to Install
 
@@ -17,14 +21,16 @@ AHK BOT Active-Build for Ragnarok Clicker
 
 **2.** Download and install latest version of [AutoHotkey][]
 
-**3.** download [latest bot version] as a zip file
+**3.** download [latest bot version][] as a zip file
 
-**4.** extract the the zip file
+**4.** extract the zip file to your desire location.
 
-**5.** open the ragnarokv??.ahk with autohotkey
+**5.** open the donron-ragnarok-clicker-botv??.ahk with autohotkey
 
-This should do it the bot is ready to rumble
+This should do it the bot is ready to rumble refere to the hotkey section for
+infos how to influence the bot.
 
+### Different windowsize
 ATTENTION!  if you change the size of the ragnarok Clicker window you need to
 			configure the bot further.
 
@@ -60,12 +66,15 @@ ATTENTION!  if you change the size of the ragnarok Clicker window you need to
  * Automatically levels heroes(frequenzy adjustable)
  * Automatically uses ZenySkills and mammonite
  * Automatically accept equiment drop from mob
- * AutoProgeress: ONLY FUNTIONAL IF WINDOW IS IN FOCUS!
+ * AutoProgeress: ONLY FUNTIONAL IF Ragnarok Clicker WINDOW IS IN FOCUS!
 					checks every so often if you are in progressmode if not
 					it activates progressmode.(For this to work )
+					
 		- If Damageskill use is activated it will use the skills after it detected
 			 farmmode.
-		- If autoTranscend: TAKE CARE THIS WILL AUTOSALvage your equiment
+			 
+		- If autoTranscend: TAKE CARE THIS WILL AUTOSALVAGE YOUR EQUIMENT BEFORE
+			ASCENDING
 			 is activated it ckecks if you have hit a wall in
 			 progression aka switch back to farmmode more than 2 times in 10 mins.
 
@@ -76,6 +85,24 @@ ATTENTION!  if you change the size of the ragnarok Clicker window you need to
 	if autoProgression is enabled and another window is open, the bot will search in
 	a small square in this window for the true RGB red colour. if found the script will send
 	the following actions to the active window.
+
+## Changelog
+
+*13.8.16: Realase Version:
+
+##To Do
+- useskills toggle
+- adjustable autoClicker count
+- LvLUP Optimization
+- Optimization for higher lvl runs
+
+## Maybe future features
+- GUI
+- IDLE SUpport
+- Mercs automation
+- Transcend Timer
+- SKillPoring clicker
+- Rebirth heroe Clicker
 
 
 
