@@ -6,6 +6,7 @@ Latest version 0.11 released on 13.8.2016
 
 * [How-to install](#how-to-install)
 	- [Different windowsize](#different-windowsize)
+* [Requirements](#requirements)
 * [Features](#features)
 * [Hotkeys](#hotkeys)
 * [Known issues](#known-issues)
@@ -59,6 +60,11 @@ ATTENTION!  if you change the size of the ragnarok Clicker window you need to
 **8.** right click on the green 'H' in your taskbar and choose 'Reload this Script'
 
 **9.** you are good to go.
+
+## Requirements
+
+You should have the 'Buy Available Upgrades' Button and the 'Farm/Progression mode'
+button unlocked
 
 ## Features
 
