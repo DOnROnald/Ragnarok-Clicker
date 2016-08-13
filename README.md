@@ -1,5 +1,6 @@
 # Ragnarok-Clicker
 AHK BOT Active-Build for Ragnarok Clicker
+Latest version 0.11 released on 13.8.2016
 
 ## Overview
 
@@ -26,7 +27,7 @@ AHK BOT Active-Build for Ragnarok Clicker
 
 **4.** extract the zip file to your desire location.
 
-**5.** open the donron-ragnarok-clicker-botv??.ahk with autohotkey
+**5.** open the donron-ragnarok-clicker-bot.ahk with autohotkey
 
 This should do it the bot is ready to rumble refere to the hotkey section for
 infos how to influence the bot.
