@@ -1,5 +1,5 @@
 ﻿; Ragnarok Clicker Bot for active-Build for Steam
-; Version 0.11
+; Version 0.12
 ; Date: 12.08.2016
 ; Author: DOnROn
 ; Published under MIT License
@@ -102,7 +102,7 @@ global title := "Ragnarok Clicker" ; steam window name
 global stop := false
 
 
-global lvlupDelay := 5			; default value=5. lower/raise this value to change starting value
+global lvlupDelay := 2			; default value=2. raise this value to change starting value
 global i := 0 ; MainLoop
 global k := 0 ; Transcendcheck
 global ElapsedTime := 0
@@ -114,13 +114,13 @@ global useSkills := true		; if you want the script to start with this feature ac
 global autoProgress := false	; if you want the script to start with this feature activated change to "true"
 global autoLevelHeroes := false	; if you want the script to start with this feature activated change to "true"
 global	autoTranscend := false	; if you want the script to start with this feature activated change to "true"
+WinH := 0
+WinGetPos,,, WinW, WinH, ahk_exe Ragnarok Clicker.exe
+global myW := WinW
+global myH := WinH		
 
-; Display Computation
-global myW := 1136				; change this to your window width(refere to the readme for more information)
-global myH := 640				; change this to your window hight(refere to the readme for more information)
-
-global defaultW := 1136			; do not change this
-global defaultH := 640			; do not change this
+global defaultW := 1144			; do not change this
+global defaultH := 672			; do not change this
 
 
 
