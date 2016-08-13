@@ -4,8 +4,9 @@ AHK BOT Active-Build for Ragnarok Clicker
 ## Overview
 
 * [How-to install](#how-to-install)
-** [Different windowsize](#different-windowsize)
+	- [Different windowsize](#different-windowsize)
 * [Features](#features)
+* [Hotkeys](#hotkeys)
 * [Known issues](#known-issues)
 * [Changelog](#changelog)
 * [To Do](#to-do)
@@ -66,7 +67,7 @@ ATTENTION!  if you change the size of the ragnarok Clicker window you need to
  * Automatically levels heroes(frequenzy adjustable)
  * Automatically uses ZenySkills and mammonite
  * Automatically accept equiment drop from mob
- * AutoProgeress: ONLY FUNTIONAL IF Ragnarok Clicker WINDOW IS IN FOCUS!
+ * AutoProgress: ONLY FUNTIONAL IF Ragnarok Clicker WINDOW IS IN FOCUS!
 					checks every so often if you are in progressmode if not
 					it activates progressmode.(For this to work )
 					
@@ -78,6 +79,19 @@ ATTENTION!  if you change the size of the ragnarok Clicker window you need to
 			 is activated it ckecks if you have hit a wall in
 			 progression aka switch back to farmmode more than 2 times in 10 mins.
 
+##Hotkeys
+
+| Hotkey | Function |
+| ------ | -------- |
+<kbd>F1</kbd>       | turns on/off autoLevelHeroes
+<kbd>F2</kbd>       | turns on/off autoProgress
+<kbd>F3</kbd>         | turns on/off useDmgSkills
+<kbd>F4</kbd>     | lowers LVLup delay
+<kbd>F5</kbd>   | raises LVLup delay
+<kbd>F6</kbd>        | turns on/off autoTranscend
+<kbd>F7</kbd> | starts script
+<kbd>F8</kbd>        | pauses script (it will finish its last cycle. so no insta stop)
+<kbd>F10</kbd>        | Exits the script(insta-stop)
 
 ##	Known issues
 
