@@ -1,12 +1,11 @@
-﻿; Ragnarok Clicker Bot for active-Build for Steam
-; Version 0.12
-; Date: 12.08.2016
+; Ragnarok Clicker Bot for active-Build for Steam
+; Version 0.14
+; Date: 14.08.2016
 ; Author: DOnROn
 ; Published under MIT License
 ; Thanks to FlyinPoulpus. I used his Clicker Heroes Bot as template
 ; and inspiration.
-; Thanks to the beta testers: I had none, because i dont have friends because i play idle games all day long.
-;
+; Thanks to tje poeple who contributed to the script.
 
 
 ; FOR INSTRUCTIONS HOW TO USE THIS SCRIPT READ THE README
@@ -83,114 +82,160 @@
 ; Defining environment and Variables
 
 
+
 CoordMode, Mouse, Relative
 SendMode Input
 #SingleInstance Force
+#KeyHistory 0
+SetWorkingDir %A_ScriptDir%
 #Persistent
 SetTitleMatchMode 3
 #MaxThreadsPerHotkey 2
 
+ 
 ; If you have perfomance issues change the following 3 values
 ; they define the delay between actions in ms
-SetMouseDelay 75				
-SetControlDelay 75				
-SetKeyDelay 75					
+SetMouseDelay 75               
+SetControlDelay 75             
+SetKeyDelay 75                 
 
 
+ 
+ 
 ; Variables
 global title := "Ragnarok Clicker" ; steam window name
 global stop := false
 
 
-global lvlupDelay := 2			; default value=2. raise this value to change starting value
+ 
+; Remove .ahk and .exe from filename to get name for INI file
+ScriptName := A_ScriptName
+StringReplace, ScriptName, ScriptName, .ahk,, All
+StringReplace, ScriptName, ScriptName, .exe,, All
+ 
+global lvlupDelay := 2          ; default value=2. raise this value to change starting value
 global i := 0 ; MainLoop
 global k := 0 ; Transcendcheck
 global ElapsedTime := 0
 global StartTime := 0
 
 
-global useDmgSkills := false	; if you want the script to start with this feature activated change to "true"
-global useSkills := true		; if you want the script to start with this feature activated change to "true"
-global autoProgress := false	; if you want the script to start with this feature activated change to "true"
-global autoLevelHeroes := false	; if you want the script to start with this feature activated change to "true"
-global	autoTranscend := false	; if you want the script to start with this feature activated change to "true"
+ 
+ 
+global useDmgSkills := false    ; if you want the script to start with this feature activated change to "true"
+global useSkills := true        ; if you want the script to start with this feature activated change to "true"
+global autoProgress := false    ; if you want the script to start with this feature activated change to "true"
+global autoLevelHeroes := false ; if you want the script to start with this feature activated change to "true"
+global  autoTranscend := false  ; if you want the script to start with this feature activated change to "true"
 WinH := 0
 WinGetPos,,, WinW, WinH, ahk_exe Ragnarok Clicker.exe
 global myW := WinW
-global myH := WinH		
+global myH := WinH     
 
-global defaultW := 1144			; do not change this
-global defaultH := 672			; do not change this
-
-
-
+ 
+global defaultW := 1144         ; do not change this
+global defaultH := 672          ; do not change this
 
 
+
+
+
+ 
+;Read prevously saved settings from .ini
+IniRead, lvlupDelay, %ScriptName%.ini, Settings, lvlupDelay, %lvlupDelay%
+IniRead, useDmgSkills, %ScriptName%.ini, Settings, useDmgSkills, %useDmgSkills%
+IniRead, autoProgress, %ScriptName%.ini, Settings, autoProgress, %autoProgress%
+IniRead, autoLevelHeroes, %ScriptName%.ini, Settings, autoLevelHeroes, %autoLevelHeroes%
+IniRead, autoTranscend, %ScriptName%.ini, Settings, autoTranscend, %autoTranscend%
+ 
 ; ================================================================================================================
 
+ 
 ; ================================================================================================================
 ; Key configuration section
 
+ 
+; make hotkeys not work outside of the game
+#IfWinActive, ahk_exe Ragnarok Clicker.exe
+ 
 ; F1: toggle hero leveling
 F1::
     autoLevelHeroes := !autoLevelHeroes
-	DisplayOptionsValue()
+    IniWrite, %autoLevelHeroes%, %ScriptName%.ini, Settings, autoLevelHeroes
+    DisplayOptionsValue()
     return
 
+ 
 ; F2: toggles autoprogress
 F2::
     autoProgress := !autoProgress
-	DisplayOptionsValue()
+    IniWrite, %autoProgress%, %ScriptName%.ini, Settings, autoProgress
+    DisplayOptionsValue()
     return
-	
+
+   
 ; F3: toggle Dmgskill use. only takes effect if autoProgress is activated
 F3::
-	useDmgSkills := !useDmgSkills
-	DisplayOptionsValue()
-    return 
-; F4: 
+    useDmgSkills := !useDmgSkills
+    IniWrite, %useDmgSkills%, %ScriptName%.ini, Settings, useDmgSkills
+    DisplayOptionsValue()
+    return
+; F4:
 F4::
-	if (lvlupDelay > 2)
-	{
-		lvlupDelay -= 1
-	}
-	DisplayOptionsValue()
-	return
-	
-; F5 : 
+    if (lvlupDelay > 2)
+    {
+        lvlupDelay -= 1
+        IniWrite, %lvlupDelay%, %ScriptName%.ini, Settings, lvlupDelay
+    }
+    DisplayOptionsValue()
+    return
+
+   
+; F5 :
 F5::
-	if (lvlupDelay < 50)
-	{
-		lvlupDelay += 1
-	}
-	DisplayOptionsValue()
-	return
-	
+    if (lvlupDelay < 50)
+    {
+        lvlupDelay += 1
+        IniWrite, %lvlupDelay%, %ScriptName%.ini, Settings, lvlupDelay
+    }
+    DisplayOptionsValue()
+    return
+
+   
 ; F6: autoTranscend only takes effect if autoProgress is activated
 F6::
-	autoTranscend := !autoTranscend
-	DisplayOptionsValue()
-	return
+    autoTranscend := !autoTranscend
+    IniWrite, %autoTranscend%, %ScriptName%.ini, Settings, autoTranscend
+    DisplayOptionsValue()
+    return
 
 
 
-; F7:	Starts Script. Only auto-clicks, obb-location-clicks and equimentwindow-clicks are on by default.
-;		for other features use hotkeys to activate them.
+ 
+ 
+ 
+; F7:   Starts Script. Only auto-clicks, obb-location-clicks and equimentwindow-clicks are on by default.
+;       for other features use hotkeys to activate them.
 F7::
-	DisplayOptionsValue()
+    DisplayOptionsValue()
     MainLoop(lvlupDelay)
     return
 
-; F8:	will pause the script. After hitting the key the script will still finish one cycle auf action.
-;		so you have to wait.
+ 
+; F8:   will pause the script. After hitting the key the script will still finish one cycle auf action.
+;       so you have to wait.
 F8::
     stop := true
-	TrayTip, Options State
-	, Pause initiated`nPlease wait for the`ncycle to finish`n
-	, 15, 34
-	return
-  
+    TrayTip, Options State
+    , Pause initiated`nPlease wait for the`ncycle to finish`n
+    , 15, 34
+    return
+
+ 
 ; F10 will exit the script entirely
+; ExitApp should work even when game window is not in focus
+#IfWinActive
+ 
 F10::
     ExitApp
     return
@@ -200,53 +245,69 @@ F10::
 ; Logic section
 
 
+ 
+ 
 MainLoop(lvlupDelay)
 {
-    stop := false		 
+    stop := false        
 
-	
-	while(!stop)
-	{
-		ControlClick, % "x" . (530*myW/defaultW) . " " . "y" (350*myH/defaultH), Ragnarok Clicker,, Left, 1, Na ;Click on Equipment
-		Sleep, 500
-		ControlClick, % "x" . (920*myW/defaultW) . " " . "y" (130*myH/defaultH), Ragnarok Clicker,, Left, 1, Na ;Click on X Equiment
-		sleep, 300
-		ClickOBBLocations()
-		Sleep, 100
-		autoClicker(100)
-		Sleep, 100
-		
-		if(i >= lvlupDelay && autoLevelHeroes )
-		{
-			ControlClick, % "x" . (45*myW/defaultW) . " " . "y" (125*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA  ; open upgradetab 
+
+ 
+   
+    while(!stop)
+    {
+        ControlClick, % "x" . (530*myW/defaultW) . " " . "y" (350*myH/defaultH), Ragnarok Clicker,, Left, 1, Na ;Click on Equipment
+        Sleep, 500
+        ControlClick, % "x" . (920*myW/defaultW) . " " . "y" (130*myH/defaultH), Ragnarok Clicker,, Left, 1, Na ;Click on X Equiment
+        sleep, 300
+        ClickOBBLocations()
+        Sleep, 100
+        autoClicker(100)
+        Sleep, 100
+
+       
+        if(i >= lvlupDelay && autoLevelHeroes )
+
+        {
+            ControlClick, % "x" . (45*myW/defaultW) . " " . "y" (125*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA  ; open upgradetab
             Sleep, 50
-			
-			Loop, 10 ; Upgrades upgraden
+
+           
+            Loop, 10 ; Upgrades upgraden
             {
                 ControlClick, % "x" . (864*myW/defaultW) . " " . "y" (420*myH/defaultH), Ragnarok Clicker,, WheelDown, 2 NA
                 Sleep, 75
             }
             ControlClick, % "x" . (364*myW/defaultW) . " " . "y" (600*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA  ; upgrades
-            Sleep, 100			
-			
+            Sleep, 100         
+
+           
             Loop, 8 ; LVLUPS
             {
-				ControlSend,, {z down}, Ragnarok Clicker				
-			
-                
+                ControlSend,, {z down}, Ragnarok Clicker               
+
+
+           
+               
                 ControlClick, % "x" . (100*myW/defaultW) . " " . "y" (460*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA
-                
-				ControlClick, % "x" . (100*myW/defaultW) . " " . "y" (415*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA
-              
-				ControlClick, % "x" . (100*myW/defaultW) . " " . "y" (360*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA
+
+
+
+
                
-				ControlClick, % "x" . (100*myW/defaultW) . " " . "y" (315*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA
+                ControlClick, % "x" . (100*myW/defaultW) . " " . "y" (415*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA
+             
+                ControlClick, % "x" . (100*myW/defaultW) . " " . "y" (360*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA
                
-				ControlClick, % "x" . (100*myW/defaultW) . " " . "y" (260*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA
+                ControlClick, % "x" . (100*myW/defaultW) . " " . "y" (315*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA
                
-				ControlClick, % "x" . (100*myW/defaultW) . " " . "y" (215*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA
-				
-				autoClicker(25)                
+                ControlClick, % "x" . (100*myW/defaultW) . " " . "y" (260*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA
+
+
+               
+                ControlClick, % "x" . (100*myW/defaultW) . " " . "y" (215*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA
+               
+                autoClicker(25)                
                
                 Loop, 2
                 {
@@ -254,11 +315,14 @@ MainLoop(lvlupDelay)
                     Sleep, 75
                 }
                 Sleep, 100
-				
-				ControlSend,, {z up}, Ragnarok Clicker
-				Sleep, 100
-				
-				
+
+               
+                ControlSend,, {z up}, Ragnarok Clicker
+                Sleep, 100
+
+
+               
+               
             }
             Loop, 10 ; Second time Upgrades upgraden
             {
@@ -267,134 +331,183 @@ MainLoop(lvlupDelay)
             }
             ControlClick, % "x" . (364*myW/defaultW) . " " . "y" (600*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA  ; upgrades
             Sleep, 100
-			
-			i := 0
-            
-		}
-		
-		if(autoProgress)
-		{
-		EnableAutoProgress()
-		}
-		
-		if(useSkills)
-		{
-		EnableSkills()
-		}
-		
-		
-		i++
-		
-	}
 
-	return
+           
+            i := 0
+
+
+
+           
+        }
+       
+        if(autoProgress)
+
+        {
+        EnableAutoProgress()
+
+
+        }
+       
+        if(useSkills)
+
+        {
+        EnableSkills()
+
+
+
+        }
+       
+       
+        i++
+
+       
+    }
+
+ 
+    return
 }
 
+ 
 autoClicker(c)
 
-{	
+ 
+{  
    ControlClick,% "x" . (864*myW/defaultW) . " " . "y" (420*myH/defaultH), Ragnarok Clicker,, Left, c,  NA
 }
 
 
+ 
+ 
 ClickOBBLocations()
 {
-		ControlClick, % "x" . (1000*myW/defaultW) . " " . "y" (450*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA        
-        ControlClick, % "x" . (740*myW/defaultW) . " " . "y" (430*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA       
+        ControlClick, % "x" . (1000*myW/defaultW) . " " . "y" (450*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA        
+        ControlClick, % "x" . (740*myW/defaultW) . " " . "y" (430*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA      
         ControlClick, % "x" . (525*myW/defaultW) . " " . "y" (485*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA        
         ControlClick, % "x" . (1050*myW/defaultW) . " " . "y" (440*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA        
         ControlClick, % "x" . (875*myW/defaultW) . " " . "y" (525*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA
         ControlClick, % "x" . (750*myW/defaultW) . " " . "y" (375*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA
-		return
+        return
 }
 
+ 
 EnableAutoProgress()
 {
-	
-	Sleep 50
-	CoordMode, Pixel, Window
+
+   
+    Sleep 50
+    CoordMode, Pixel, Window
     PixelSearch, FoundX, FoundY, 1111*myW/defaultW, 230*myH/defaultH, 1122*myW/defaultW, 244*myH/defaultH, 0xFF0000, 0, Fast RGB
     Sleep, 20
-	
-	if (ErrorLevel = 0 && k = 0)
-	{
-		StartTime := A_TickCount
-		;MsgBox, StartTime ist %StartTime%		; for script development
-	}
-	
-	if(ErrorLevel = 0)
-	{
-		ControlSend,, A, Ragnarok Clicker
-		k++
-	}
-	
-	if (ErrorLevel = 0 && k != 0)
-	{
-		Sleep, 20
-		ElapsedTime := A_TickCount - StartTime
-		;MsgBox, Elaspsedtime is %ElapsedTime%		; for script development
-		;MsgBox, % (ElapsedTime/1000) .  " seconds" ; for script development
-				
-		if (useDmgSkills)
-		{
-			ControlSend,, 123879, Ragnarok Clicker
-		
-		}
-		
-	
-	}
-		
-	
-	
-	if(ElapsedTime > 660000 )
-	{
-		
-		
-		
-		if(ElapsedTime/k < 230000 && autoTranscend)
-		{
-			
-			ControlClick, % "x" . (320*myW/defaultW) . " " . "y" (130*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA ; equiment tap
-			sleep, 3000
-			ControlClick, % "x" . (272*myW/defaultW) . " " . "y" (484*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA ; Salvage			
-			sleep, 3000
-			ControlClick, % "x" . (494*myW/defaultW) . " " . "y" (430*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA ; Salvage	"yes"		
-			sleep, 3000
-			ControlClick, % "x" . (1120*myW/defaultW) . " " . "y" (280*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA ; Transcend button
-			sleep, 3000
-			ControlClick, % "x" . (500*myW/defaultW) . " " . "y" (500*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA ; Transcend "yes"
-			sleep, 3000
-		}
-		ElapsedTime := 0
-		k := 0
-	return
-	}	
-		
-	if (ErrorLevel != 0)
-	{
-		return
-	}
-	
-	
-	
 
+   
+    if (ErrorLevel = 0 && k = 0)
+    {
+        StartTime := A_TickCount
+        ;MsgBox, StartTime ist %StartTime%      ; for script development
+    }
+
+   
+    if(ErrorLevel = 0)
+    {
+        ControlSend,, A, Ragnarok Clicker
+        k++
+    }
+
+   
+    if (ErrorLevel = 0 && k != 0)
+    {
+        Sleep, 20
+        ElapsedTime := A_TickCount - StartTime
+        ;MsgBox, Elaspsedtime is %ElapsedTime%      ; for script development
+        ;MsgBox, % (ElapsedTime/1000) .  " seconds" ; for script development
+
+               
+        if (useDmgSkills)
+
+        {
+            ControlSend,, 123879, Ragnarok Clicker
+
+
+
+
+       
+        }
+       
+   
+    }
+
+
+
+       
+   
+   
+    if(ElapsedTime > 660000 )
+    {
+
+
+
+       
+       
+       
+        if(ElapsedTime/k < 230000 && autoTranscend)
+
+
+        {
+           
+            ControlClick, % "x" . (320*myW/defaultW) . " " . "y" (130*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA ; equiment tap
+            sleep, 3000
+            ControlClick, % "x" . (272*myW/defaultW) . " " . "y" (484*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA ; Salvage         
+            sleep, 3000
+            ControlClick, % "x" . (494*myW/defaultW) . " " . "y" (430*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA ; Salvage  "yes"      
+            sleep, 3000
+            ControlClick, % "x" . (1120*myW/defaultW) . " " . "y" (280*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA ; Transcend button
+            sleep, 3000
+            ControlClick, % "x" . (500*myW/defaultW) . " " . "y" (500*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA ; Transcend "yes"
+            sleep, 3000
+
+        }
+        ElapsedTime := 0
+        k := 0
+    return
+
+
+    }  
+       
+    if (ErrorLevel != 0)
+    {
+        return
+    }
+
+
+
+
+   
+   
+   
+ 
     return
 }
 
+ 
 EnableSkills()
 {
 
+ 
 ControlSend,, 456, Ragnarok Clicker
 
+ 
 return
 }
 
 
+ 
+ 
 DisplayOptionsValue()
 {
-	TrayTip, Options State
-	, DOnROns Ragnarok-Clicker`n[F7 to start] [F8 to stop]`n[F10 to exit script]`nHeroes leveling[F1]: %autoLevelHeroes%`nAutoprogress[F2]: %autoProgress%`nuseDmgSkills[F3]: %useDmgSkills%`nautoTranscend[F6]: %autoTranscend%`nlvlupDelay[F4-/F5+]: %lvlupDelay%`n
-	, 10, 33
+    TrayTip, Options State
+    , DOnROns Ragnarok-Clicker`n[F7 to start] [F8 to stop]`n[F10 to exit script]`nHeroes leveling[F1]: %autoLevelHeroes%`nAutoprogress[F2]: %autoProgress%`nuseDmgSkills[F3]: %useDmgSkills%`nautoTranscend[F6]: %autoTranscend%`nlvlupDelay[F4-/F5+]: %lvlupDelay%`n
+    , 10, 33
 }
-; ================================================================================================================
 
+
+    ; ================================================================================================================
