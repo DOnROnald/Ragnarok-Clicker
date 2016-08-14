@@ -57,7 +57,7 @@ button unlocked
 			ASCENDING
 			 is activated it ckecks if you have hit a wall in
 			 progression aka switch back to farmmode more than 2 times in 10 mins.
-
+ * Saves settings into .ini file
 ##Hotkeys
 
 | Hotkey | Function |
@@ -83,7 +83,14 @@ button unlocked
 
 ## Changelog
 
-*13.8.16: Realase Version: 0.11
+*14.8.16 Release Version: 0.14
+	- NO Keystroke History anymore
+	- Added save settings in an .ini file
+
+*13.8.16: Release Version: 0.13
+	-Added automatic windowsize detection.
+	
+*13.8.16: Release Version: 0.11
 
 ##To Do
 - useskills toggle
