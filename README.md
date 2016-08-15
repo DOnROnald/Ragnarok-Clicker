@@ -30,7 +30,15 @@ Latest version 0.11 released on 13.8.2016
 
 **5.** open the donron-ragnarok-clicker-bot.ahk with autohotkey
 
+**6.** There should be a Gui-Pop-Up. Choose your Settings.
+
 This should do it the bot is ready to rumble.
+
+## Different Windowsize
+
+If you want to change the windowsize.
+Change it in a way that there are no black bars.
+Then open the Bot. Otherwise the clicklocation will be wrong.
 
 
 ## Requirements
@@ -60,17 +68,7 @@ button unlocked
  * Saves settings into .ini file
 ##Hotkeys
 
-| Hotkey | Function |
-| ------ | -------- |
-<kbd>F1</kbd>       | turns on/off autoLevelHeroes
-<kbd>F2</kbd>       | turns on/off autoProgress
-<kbd>F3</kbd>         | turns on/off useDmgSkills
-<kbd>F4</kbd>     | lowers LVLup delay
-<kbd>F5</kbd>   | raises LVLup delay
-<kbd>F6</kbd>        | turns on/off autoTranscend
-<kbd>F7</kbd> | starts script
-<kbd>F8</kbd>        | pauses script (it will finish its last cycle. so no insta stop)
-<kbd>F10</kbd>        | Exits the script(insta-stop)
+* Since Version 0.2 no more Hotkeys 
 
 ##	Known issues
 
@@ -82,6 +80,13 @@ button unlocked
 	remedy this.
 
 ## Changelog
+*15.8.16 Great Overhaul! Version: 0.2
+	- New Gui. No more Hotkeys.
+	- Added Support for Idle-Build
+	- Added autoTranscend log.
+	- Improved the Lvlup process.
+	
+	- BugFix: Changes in the Lvlup Delay werent detected. 
 
 *14.8.16 Release Version: 0.14
 	- NO Keystroke History anymore
@@ -93,16 +98,14 @@ button unlocked
 *13.8.16: Release Version: 0.11
 
 ##To Do
-- useskills toggle
-- adjustable autoClicker count
-- LvLUP Optimization
+
+- Transcend Timer(adjustable)
+- further LvLUP Optimization
 - Optimization for higher lvl runs
 
 ## Maybe future features
-- GUI
-- IDLE SUpport
+
 - Mercs automation
-- Transcend Timer
 - SKillPoring clicker
 - Rebirth heroe Clicker
 
