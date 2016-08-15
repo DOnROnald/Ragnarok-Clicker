@@ -275,7 +275,7 @@ LevelHeroes(LevelCycle)
            
             Loop, 10 ; Upgrades upgraden
             {
-                ControlClick, % "x" . (864*myW/defaultW) . " " . "y" (420*myH/defaultH), Ragnarok Clicker,, WheelDown, 2 NA
+                ControlClick, % "x" . (100*myW/defaultW) . " " . "y" (420*myH/defaultH), Ragnarok Clicker,, WheelDown, 2 NA
                 Sleep, 75
             }
             ControlClick, % "x" . (364*myW/defaultW) . " " . "y" (600*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA  ; upgrades
@@ -297,7 +297,7 @@ LevelHeroes(LevelCycle)
                
                 Loop, 2
                 {
-                    ControlClick, % "x" . (864*myW/defaultW) . " " . "y" (420*myH/defaultH), Ragnarok Clicker,, WheelUp, 1 NA
+                    ControlClick, % "x" . (100*myW/defaultW) . " " . "y" (420*myH/defaultH), Ragnarok Clicker,, WheelUp, 1 NA
                     Sleep, 75
                 }
                
@@ -307,7 +307,7 @@ LevelHeroes(LevelCycle)
             }
             Loop, 10 ; Second time Upgrades upgraden
             {
-                ControlClick, % "x" . (864*myW/defaultW) . " " . "y" (420*myH/defaultH), Ragnarok Clicker,, WheelDown, 2 NA
+                ControlClick, % "x" . (100*myW/defaultW) . " " . "y" (420*myH/defaultH), Ragnarok Clicker,, WheelDown, 2 NA
                 Sleep, 75
             }
             ControlClick, % "x" . (364*myW/defaultW) . " " . "y" (600*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA  ; upgrades
