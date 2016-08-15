@@ -80,20 +80,24 @@ button unlocked
 	remedy this.
 
 ## Changelog
+*15.8.16 V0.21
+- Changes in Lvlup Process for Idle-Build
+
+
 *15.8.16 Great Overhaul! Version: 0.2
-	- New Gui. No more Hotkeys.
-	- Added Support for Idle-Build
-	- Added autoTranscend log.
-	- Improved the Lvlup process.
+- New Gui. No more Hotkeys.
+- Added Support for Idle-Build
+- Added autoTranscend log.
+- Improved the Lvlup process.
 	
-	- BugFix: Changes in the Lvlup Delay werent detected. 
+- BugFix: Changes in the Lvlup Delay werent detected. 
 
 *14.8.16 Release Version: 0.14
-	- NO Keystroke History anymore
-	- Added save settings in an .ini file
+- NO Keystroke History anymore
+- Added save settings in an .ini file
 
 *13.8.16: Release Version: 0.13
-	-Added automatic windowsize detection.
+-Added automatic windowsize detection.
 	
 *13.8.16: Release Version: 0.11
 
