@@ -1,6 +1,6 @@
 ; Ragnarok Clicker Bot for active-Build for Steam
-; Version 0.14
-; Date: 14.08.2016
+; Version 0.21
+; Date: 15.08.2016
 ; Author: DOnROn
 ; Published under MIT License
 ; Thanks to FlyinPoulpus. I used his Clicker Heroes Bot as template
@@ -88,6 +88,9 @@ global k := 0 ; Transcendcheck
 global ElapsedTime := 0
 global StartTime := 0
 global Stop := 0
+global ClickCountLvL := 0
+global l := 0
+global StartTranscendTimer := 0
 
 
 WinGetPos,,, WinW, WinH, ahk_exe Ragnarok Clicker.exe
@@ -102,7 +105,7 @@ global defaultH := 672          ; do not change this
 ;========================================================
 ; GUI startup
 ;Variablen
-version := "v0.2"
+version := "v0.21"
 bb := 0
 
 
@@ -111,13 +114,15 @@ IniRead, Delay, %ScriptName%.ini, Settings, Delay
 IniRead, UseDmgSkills, %ScriptName%.ini, Settings, UseDmgSkills, %UseDmgSkills%
 IniRead, AutoProgress, %ScriptName%.ini, Settings, AutoProgress, %AutoProgress%
 IniRead, AutoLevelHeroes, %ScriptName%.ini, Settings, AutoLevelHeroes, %AutoLevelHeroes%
-IniRead, AutoTranscend, %ScriptName%.ini, Settings, AutoTranscend, %AutoTranscend%
+IniRead, AutoTranscendWall, %ScriptName%.ini, Settings, AutoTranscendWall, %AutoTranscendWall%
 IniRead, UseSkills, %ScriptName%.ini, Settings, UseSkills, %UseSkills%
 IniRead, AutoClicker, %ScriptName%.ini, Settings, AutoClicker, %AutoClicker%
 IniRead, AutoOBBClicker, %ScriptName%.ini, Settings, AutoOBBClicker, %AutoOBBClicker%
 IniRead, AutoEquipmentClicker, %ScriptName%.ini, Settings, AutoEquipmentClicker, %AutoEquipmentClicker%
 IniRead, ClickCount, %ScriptName%.ini, Settings, ClickCount, %ClickCount%
 IniRead, LevelCycle, %ScriptName%.ini, Settings, LevelCycle, %LevelCycle%
+IniRead, AutoTranscendTime, %ScriptName%.ini, Settings, AutoTranscendTime, %AutoTranscendTime%
+IniRead, TranscendTimer, %ScriptName%.ini, Settings, TranscendTimer, %TranscendTimer%
 
 
 
@@ -126,7 +131,7 @@ Gui, Add, CheckBox, x6 y72 w160 h20 vAutoOBBClicker Checked%AutoOBBClicker%, aut
 Gui, Add, CheckBox, x6 y102 w160 h20 vAutoEquipmentClicker Checked%AutoEquipmentClicker%, autoEquipmentclicker
 Gui, Add, CheckBox, x6 y132 w160 h20 vAutoProgress Checked%AutoProgress%, autoProgress
 Gui, Add, CheckBox, x36 y152 w130 h20 vUseDmgSkills Checked%UseDmgSkills% , useDmgSkills
-Gui, Add, CheckBox, x36 y172 w130 h20 vAutoTranscend Checked%AutoTranscend%, autoTranscend
+Gui, Add, CheckBox, x36 y172 w130 h20 vAutoTranscendWall Checked%AutoTranscendWall%, autoTranscendWall
 Gui, Add, Edit, x6 y32 w25 h15 vClickCount Limit3 Number, %ClickCount%
 Gui, Add, Text, x33 y32 w150 h20, Clicks per Cycle(1-999)
 Gui, Add, CheckBox, x6 y202 w120 h30 vAutoLevelHeroes Checked%AutoLevelHeroes%, AutoLevelHeroes
@@ -136,6 +141,9 @@ Gui, Add, CheckBox, x6 y272 w160 h50 vUseSkills Checked%UseSkills%, useZenySkill
 Gui, Add, Button, x186 y12 w130 h50 gReadme, readme/latest version opens browser
 Gui, Add, Edit, x186 y290 w25 h15 vDelay Limit3 Number, %Delay%
 Gui, Add, Text, x211 y285 w100 h30, Delay between`nActions(in ms)
+Gui, Add, CheckBox, x186 y195 w160 h50 vAutoTranscendTime Checked%AutoTranscendTime%, Transcends after a certain duration
+Gui, Add, Edit, x186 y240 w25 h15 vTranscendTimer Limit3 Number, %TranscendTimer%
+Gui, Add, Text, x211 y240 w100 h30, Time to Transcend (in min)
 Gui, Add, Button, x186 y332 w130 h60 gGuiClose, Exit
 Gui, Add, Button, x6 y332 w80 h60 gstartMainLoop, Start
 Gui, Add, Button, x86 y332 w80 h60 gStop, Stop`n(will finish 1 last cycle)
@@ -172,17 +180,21 @@ startMainLoop:
 { 	
 	Stop := false
 	Gui, Submit, NoHide
+
+	ClickCountLvL :=  Round(ClickCount)/4* AutoClicker
 	IniWrite, %Delay%, %ScriptName%.ini, Settings, Delay
 	IniWrite, %UseDmgSkills%, %ScriptName%.ini, Settings, UseDmgSkills
 	IniWrite, %AutoProgress%, %ScriptName%.ini, Settings, AutoProgress
 	IniWrite, %AutoLevelHeroes%, %ScriptName%.ini, Settings, AutoLevelHeroes
-	IniWrite, %AutoTranscend%, %ScriptName%.ini, Settings, AutoTranscend
+	IniWrite, %AutoTranscendWall%, %ScriptName%.ini, Settings, AutoTranscendWallal
 	IniWrite, %UseSkills%, %ScriptName%.ini, Settings, UseSkills
 	IniWrite, %AutoClicker%, %ScriptName%.ini, Settings, AutoClicker
 	IniWrite, %AutoOBBClicker%, %ScriptName%.ini, Settings, AutoOBBClicker
 	IniWrite, %AutoEquipmentClicker%, %ScriptName%.ini, Settings, AutoEquipmentClicker
 	IniWrite, %ClickCount%, %ScriptName%.ini, Settings, ClickCount
 	IniWrite, %LevelCycle%, %ScriptName%.ini, Settings, LevelCycle
+	IniWrite, %AutoTranscendTime%, %ScriptName%.ini, Settings, AutoTranscendTime
+	IniWrite, %TranscendTimer%, %ScriptName%.ini, Settings, TranscendTimer
 	
 	SetMouseDelay %Delay%               
 	SetControlDelay %Delay%	
@@ -212,19 +224,23 @@ startMainLoop:
 		
         if(AutoLevelHeroes)
 		{
-		LevelHeroes(LevelCycle)
+		LevelHeroes(LevelCycle, ClickCountLvL)
 		}
        
         if(AutoProgress)
         {
-        EnableAutoProgress(AutoTranscend, UseDmgSkills)
+        EnableAutoProgress(AutoTranscendWall, UseDmgSkills)
         }
        
         if(UseSkills)
         {
         EnableSkills()
         }
-       
+		
+		if(AutoTranscendTime)
+		{
+		EnableAutoTranscendTime(TranscendTimer)
+		}
        
         i++
        
@@ -265,7 +281,7 @@ ClickOBBLocations()
         
 }
 
-LevelHeroes(LevelCycle)
+LevelHeroes(LevelCycle, ClickCountLvL)
 {
 	
 	if(i >= LevelCycle)
@@ -275,7 +291,7 @@ LevelHeroes(LevelCycle)
            
             Loop, 10 ; Upgrades upgraden
             {
-                ControlClick, % "x" . (100*myW/defaultW) . " " . "y" (420*myH/defaultH), Ragnarok Clicker,, WheelDown, 2 NA
+                ControlClick, % "x" . (75*myW/defaultW) . " " . "y" (420*myH/defaultH), Ragnarok Clicker,, WheelDown, 2 NA
                 Sleep, 75
             }
             ControlClick, % "x" . (364*myW/defaultW) . " " . "y" (600*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA  ; upgrades
@@ -286,18 +302,18 @@ LevelHeroes(LevelCycle)
                 ControlSend,, {ctrl down}, Ragnarok Clicker               
            
                
-                ControlClick, % "x" . (100*myW/defaultW) . " " . "y" (460*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA
-                ControlClick, % "x" . (100*myW/defaultW) . " " . "y" (415*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA             
-                ControlClick, % "x" . (100*myW/defaultW) . " " . "y" (360*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA               
-                ControlClick, % "x" . (100*myW/defaultW) . " " . "y" (315*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA               
-                ControlClick, % "x" . (100*myW/defaultW) . " " . "y" (260*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA               
-                ControlClick, % "x" . (100*myW/defaultW) . " " . "y" (215*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA
+                ControlClick, % "x" . (75*myW/defaultW) . " " . "y" (460*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA
+                ControlClick, % "x" . (75*myW/defaultW) . " " . "y" (415*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA             
+                ControlClick, % "x" . (75*myW/defaultW) . " " . "y" (360*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA               
+                ControlClick, % "x" . (75*myW/defaultW) . " " . "y" (315*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA               
+                ControlClick, % "x" . (75*myW/defaultW) . " " . "y" (260*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA               
+                ControlClick, % "x" . (75*myW/defaultW) . " " . "y" (215*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA
                
-                ;autoClicker(5)                
-               
+                Clicker(ClickCountLvL)                
+				
                 Loop, 2
                 {
-                    ControlClick, % "x" . (100*myW/defaultW) . " " . "y" (420*myH/defaultH), Ragnarok Clicker,, WheelUp, 1 NA
+                    ControlClick, % "x" . (75*myW/defaultW) . " " . "y" (420*myH/defaultH), Ragnarok Clicker,, WheelUp, 1 NA
                     Sleep, 75
                 }
                
@@ -307,7 +323,7 @@ LevelHeroes(LevelCycle)
             }
             Loop, 10 ; Second time Upgrades upgraden
             {
-                ControlClick, % "x" . (100*myW/defaultW) . " " . "y" (420*myH/defaultH), Ragnarok Clicker,, WheelDown, 2 NA
+                ControlClick, % "x" . (75*myW/defaultW) . " " . "y" (420*myH/defaultH), Ragnarok Clicker,, WheelDown, 2 NA
                 Sleep, 75
             }
             ControlClick, % "x" . (364*myW/defaultW) . " " . "y" (600*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA  ; upgrades
@@ -318,7 +334,7 @@ LevelHeroes(LevelCycle)
 
 }
  
-EnableAutoProgress(AutoTranscend, UseDmgSkills)
+EnableAutoProgress(AutoTranscendWall, UseDmgSkills)
 {
 	;MsgBox, k %k%
     Sleep 50
@@ -359,10 +375,9 @@ EnableAutoProgress(AutoTranscend, UseDmgSkills)
     if(ElapsedTime > 660000 )
     {
 		;MsgBox, AutoTrans %AutoTranscend%
-		if(AutoTranscend)
+		if(AutoTranscendWall)
 		{
-		Soundbeep  
-		EnableAutoTranscend()
+		EnableAutoTranscendWall()
 		}
 
     return
@@ -379,7 +394,7 @@ EnableAutoProgress(AutoTranscend, UseDmgSkills)
     return
 }
 
-EnableAutoTranscend()
+EnableAutoTranscendWall()
 {	
 	
 	if(ElapsedTime/k < 230000)
@@ -399,7 +414,44 @@ EnableAutoTranscend()
         }
         ElapsedTime := 0
         k := 0
+		l := 0
 	return
+}
+
+EnableAutoTranscendTime(TranscendTimer)
+{	
+	
+	if(l = 0)
+	{
+		
+		StartTranscendTimer := A_TickCount
+		l++
+	}
+
+	if(l > 0)
+	{		
+		ElapsedTranscendTimer := (A_TickCount - StartTranscendTimer)/60000
+		
+	}
+	
+	
+	If(ElapsedTranscendTimer > TranscendTimer)
+	{
+		MsgBox, transcend
+        ControlClick, % "x" . (320*myW/defaultW) . " " . "y" (130*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA ; equiment tap
+        sleep, 3000
+        ControlClick, % "x" . (272*myW/defaultW) . " " . "y" (484*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA ; Salvage         
+        sleep, 3000
+        ControlClick, % "x" . (494*myW/defaultW) . " " . "y" (430*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA ; Salvage  "yes"      
+        sleep, 3000
+        ControlClick, % "x" . (1120*myW/defaultW) . " " . "y" (280*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA ; Transcend button
+        sleep, 3000
+        ControlClick, % "x" . (500*myW/defaultW) . " " . "y" (500*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA ; Transcend "yes"
+        sleep, 3000
+		FileAppend, %A_DD%.%A_MMMM% %A_Hour%:%A_Min%:%A_Sec% === Last autoTranscend`n, autoTranscendLog.txt
+		l := 0
+	 }
+return	 
 }
  
 EnableSkills()
