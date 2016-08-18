@@ -1,6 +1,6 @@
 ; Ragnarok Clicker Bot for active-Build for Steam
-; Version 0.21
-; Date: 15.08.2016
+; Version 0.22
+; Date: 18.08.2016
 ; Author: DOnROn
 ; Published under MIT License
 ; Thanks to FlyinPoulpus. I used his Clicker Heroes Bot as template
@@ -105,7 +105,7 @@ global defaultH := 672          ; do not change this
 ;========================================================
 ; GUI startup
 ;Variablen
-version := "v0.21"
+version := "v0.22"
 bb := 0
 
 
@@ -364,6 +364,8 @@ EnableAutoProgress(AutoTranscendWall, UseDmgSkills)
         if (UseDmgSkills)
         {
             ControlSend,, 123879, Ragnarok Clicker
+			ControlClick,% "x" . (864*myW/defaultW) . " " . "y" (420*myH/defaultH), Ragnarok Clicker,, Left, 200,  NA
+
        
         }
 	       
@@ -372,7 +374,7 @@ EnableAutoProgress(AutoTranscendWall, UseDmgSkills)
        
    
 	;MsgBox, % (ElapsedTime/1000) .  " seconds" ; for script development
-    if(ElapsedTime > 660000 )
+    if(ElapsedTime > 300000 )
     {
 		;MsgBox, AutoTrans %AutoTranscend%
 		if(AutoTranscendWall)
@@ -397,7 +399,7 @@ EnableAutoProgress(AutoTranscendWall, UseDmgSkills)
 EnableAutoTranscendWall()
 {	
 	
-	if(ElapsedTime/k < 230000)
+	if(ElapsedTime/k < 150000)
         {
 			
             ControlClick, % "x" . (320*myW/defaultW) . " " . "y" (130*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA ; equiment tap
@@ -412,9 +414,18 @@ EnableAutoTranscendWall()
             sleep, 3000
 			FileAppend, %A_DD%.%A_MMMM% %A_Hour%:%A_Min%:%A_Sec% === Last autoTranscend`n, autoTranscendLog.txt
         }
-        ElapsedTime := 0
-        k := 0
-		l := 0
+		
+    ElapsedTime := 0
+    k := 0
+	l := 0
+	
+	ControlSend,, A, Ragnarok Clicker
+	loop, 10
+	{
+	ControlClick,% "x" . (864*myW/defaultW) . " " . "y" (420*myH/defaultH), Ragnarok Clicker,, Left, 5,  NA
+	Sleep, 100
+	}
+	
 	return
 }
 
@@ -437,7 +448,7 @@ EnableAutoTranscendTime(TranscendTimer)
 	
 	If(ElapsedTranscendTimer > TranscendTimer)
 	{
-		MsgBox, transcend
+		;MsgBox, transcend
         ControlClick, % "x" . (320*myW/defaultW) . " " . "y" (130*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA ; equiment tap
         sleep, 3000
         ControlClick, % "x" . (272*myW/defaultW) . " " . "y" (484*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA ; Salvage         
@@ -450,7 +461,15 @@ EnableAutoTranscendTime(TranscendTimer)
         sleep, 3000
 		FileAppend, %A_DD%.%A_MMMM% %A_Hour%:%A_Min%:%A_Sec% === Last autoTranscend`n, autoTranscendLog.txt
 		l := 0
-	 }
+	}
+	
+	ControlSend,, A, Ragnarok Clicker
+	loop, 25
+	{
+	ControlClick,% "x" . (864*myW/defaultW) . " " . "y" (420*myH/defaultH), Ragnarok Clicker,, Left, 5,  NA
+	Sleep, 100
+	}
+	
 return	 
 }
  
@@ -458,6 +477,8 @@ EnableSkills()
 {
  
 ControlSend,, 456, Ragnarok Clicker
+ControlClick,% "x" . (864*myW/defaultW) . " " . "y" (420*myH/defaultH), Ragnarok Clicker,, Left, 200,  NA
+
  
 return
 }

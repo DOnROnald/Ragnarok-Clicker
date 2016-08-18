@@ -64,7 +64,7 @@ button unlocked
 		- If autoTranscend: TAKE CARE THIS WILL AUTOSALVAGE YOUR EQUIMENT BEFORE
 			ASCENDING
 			 is activated it ckecks if you have hit a wall in
-			 progression aka switch back to farmmode more than 2 times in 10 mins.
+			 progression aka switch back to farmmode more than 2 times in 5 mins.
  * Saves settings into .ini file
 ##Hotkeys
 
@@ -80,6 +80,11 @@ button unlocked
 	remedy this.
 
 ## Changelog
+*18.8.26 v.0.22
+- added 100 Auto-Clicks after AutoTranscension(so that Idle-Build transcension works.)
+- Changed autoTranscensionWall conditions to 3 times Farmmode-detections in 5 mins.
+- Added autoClicks after skill usage. improves Active- and Idle-Build.
+
 *15.8.16 V0.21
 - Changes in Lvlup Process for Idle-Build
 
