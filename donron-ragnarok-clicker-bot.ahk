@@ -1,6 +1,6 @@
 ; Ragnarok Clicker Bot for active-Build for Steam
-; Version 0.22
-; Date: 18.08.2016
+; Version 0.23
+; Date: 04.09.2016
 ; Author: DOnROn
 ; Published under MIT License
 ; Thanks to FlyinPoulpus. I used his Clicker Heroes Bot as template
@@ -105,7 +105,7 @@ global defaultH := 672          ; do not change this
 ;========================================================
 ; GUI startup
 ;Variablen
-version := "v0.22"
+version := "v0.23"
 bb := 0
 
 
@@ -299,7 +299,7 @@ LevelHeroes(LevelCycle, ClickCountLvL)
            
             Loop, 8 ; LVLUPS
             {
-                ControlSend,, {ctrl down}, Ragnarok Clicker               
+                ControlSend,, {q down}, Ragnarok Clicker               
            
                
                 ControlClick, % "x" . (75*myW/defaultW) . " " . "y" (460*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA
@@ -317,7 +317,7 @@ LevelHeroes(LevelCycle, ClickCountLvL)
                     Sleep, 75
                 }
                
-                ControlSend,, {ctrl up}, Ragnarok Clicker
+                ControlSend,, {q up}, Ragnarok Clicker
                 
                
             }
@@ -413,18 +413,21 @@ EnableAutoTranscendWall()
             ControlClick, % "x" . (500*myW/defaultW) . " " . "y" (500*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA ; Transcend "yes"
             sleep, 3000
 			FileAppend, %A_DD%.%A_MMMM% %A_Hour%:%A_Min%:%A_Sec% === Last autoTranscend`n, autoTranscendLog.txt
-        }
+			
+			ControlSend,, A, Ragnarok Clicker
+			
+			loop, 10
+			{
+			ControlClick,% "x" . (864*myW/defaultW) . " " . "y" (420*myH/defaultH), Ragnarok Clicker,, Left, 5,  NA
+			Sleep, 100
+			}
+	   }
 		
     ElapsedTime := 0
     k := 0
 	l := 0
 	
-	ControlSend,, A, Ragnarok Clicker
-	loop, 10
-	{
-	ControlClick,% "x" . (864*myW/defaultW) . " " . "y" (420*myH/defaultH), Ragnarok Clicker,, Left, 5,  NA
-	Sleep, 100
-	}
+
 	
 	return
 }
@@ -461,14 +464,17 @@ EnableAutoTranscendTime(TranscendTimer)
         sleep, 3000
 		FileAppend, %A_DD%.%A_MMMM% %A_Hour%:%A_Min%:%A_Sec% === Last autoTranscend`n, autoTranscendLog.txt
 		l := 0
+		ControlSend,, A, Ragnarok Clicker
+		
+		loop, 25
+		{
+		ControlClick,% "x" . (864*myW/defaultW) . " " . "y" (420*myH/defaultH), Ragnarok Clicker,, Left, 5,  NA
+		Sleep, 100
+		}	
 	}
 	
-	ControlSend,, A, Ragnarok Clicker
-	loop, 25
-	{
-	ControlClick,% "x" . (864*myW/defaultW) . " " . "y" (420*myH/defaultH), Ragnarok Clicker,, Left, 5,  NA
-	Sleep, 100
-	}
+	
+	
 	
 return	 
 }
