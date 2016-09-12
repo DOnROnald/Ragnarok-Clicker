@@ -1,11 +1,12 @@
 ; Ragnarok Clicker Bot for active-Build for Steam
-; Version 0.23
-; Date: 04.09.2016
+; Version 0.3
+; Date: 12.09.2016
 ; Author: DOnROn
 ; Published under MIT License
 ; Thanks to FlyinPoulpus. I used his Clicker Heroes Bot as template
 ; and inspiration.
-; Thanks to tje poeple who contributed to the script.
+; Thanks to the poeple who contributed to the script.
+; Special Thanks to [TUF]DR4LUC0N for beta-testing and suggestions.
 
 
 ; FOR INSTRUCTIONS HOW TO USE THIS SCRIPT READ THE README
@@ -33,29 +34,27 @@
 ; 3. Automatically levels heroes(frequenzy adjustable)
 ; 4. Automatically uses ZenySkills and mammonite
 ; 5. Automatically accept equiment drop from mob
-; 6. AutoProgeress: ONLY FUNTIONAL IF WINDOW IS IN FOCUS!
-;					checks every so often if you are in progressmode if not
+; 6. AutoProgeress: checks every so often if you are in progressmode if not
 ;					it activates progressmode.(For this to work )
 ;		6.1: If Damageskill use is activated it will use the skills after it detected
 ;			 farmmode.
 ;		6.2: If autoTranscend: TAKE CARE THIS WILL AUTOSALvage your equiment
 ;			 is activated it ckecks if you have hit a wall in
-;			 progression aka switch back to farmmode more than 2 times in 10 mins.	
+;			 progression aka switch back to farmmode more than 2 times in 5 mins.
+; 7. Automatically Transcend after a certain duration. TAKE CARE THIS WILL ;			AUTOSALvage your equiment
+; 8. Logs time/date of autoTrascends. and saves a screenshot of Ragnarock-Clicker. ;    So you can check the progress/manuals you made.
+
 ;====
 ;====
 ; TODO:
-; - useskills toggle
-; - adjustable autoClicker count
 ; - Skill use improvements
-; - LvLUP Optimization
-; - Optimization for higher lvl runs
+; - autoRaid
+
 ;====
 ;====
 ; MAYBE FUTURE FEATURES:
-; - GUI
-; - IDLE SUpport
+
 ; - Mercs automation
-; - Transcend Timer
 ; - SKillPoring clicker
 ; - Rebirth heroe Clicker
 ;====
@@ -77,6 +76,9 @@ SetWorkingDir %A_ScriptDir%
 SetTitleMatchMode 3
 #MaxThreadsPerHotkey 2
 
+#include %A_ScriptDir%\Gdip_All.ahk
+
+
 ; Remove .ahk and .exe from filename to get name for INI file
 ScriptName := A_ScriptName
 StringReplace, ScriptName, ScriptName, .ahk,, All
@@ -91,6 +93,7 @@ global Stop := 0
 global ClickCountLvL := 0
 global l := 0
 global StartTranscendTimer := 0
+global lvlupimage = "C:\1Daten\ahk\ragnarok clicker\lvlupmax.PNG"
 
 
 WinGetPos,,, WinW, WinH, ahk_exe Ragnarok Clicker.exe
@@ -105,7 +108,7 @@ global defaultH := 672          ; do not change this
 ;========================================================
 ; GUI startup
 ;Variablen
-version := "v0.23"
+version := "v0.30"
 bb := 0
 
 
@@ -180,13 +183,14 @@ startMainLoop:
 { 	
 	Stop := false
 	Gui, Submit, NoHide
+	
 
 	ClickCountLvL :=  Round(ClickCount)/4* AutoClicker
 	IniWrite, %Delay%, %ScriptName%.ini, Settings, Delay
 	IniWrite, %UseDmgSkills%, %ScriptName%.ini, Settings, UseDmgSkills
 	IniWrite, %AutoProgress%, %ScriptName%.ini, Settings, AutoProgress
 	IniWrite, %AutoLevelHeroes%, %ScriptName%.ini, Settings, AutoLevelHeroes
-	IniWrite, %AutoTranscendWall%, %ScriptName%.ini, Settings, AutoTranscendWallal
+	IniWrite, %AutoTranscendWall%, %ScriptName%.ini, Settings, AutoTranscendWall
 	IniWrite, %UseSkills%, %ScriptName%.ini, Settings, UseSkills
 	IniWrite, %AutoClicker%, %ScriptName%.ini, Settings, AutoClicker
 	IniWrite, %AutoOBBClicker%, %ScriptName%.ini, Settings, AutoOBBClicker
@@ -202,9 +206,7 @@ startMainLoop:
 	
 	
     while(!Stop)
-    {
-		
-		
+    {		
 		if(AutoEquipmentClicker)
 		{
 		EquipmentClicker()
@@ -219,12 +221,10 @@ startMainLoop:
 		{
 		Clicker(ClickCount)
 		}
-		
-		
-		
+			
         if(AutoLevelHeroes)
 		{
-		LevelHeroes(LevelCycle, ClickCountLvL)
+		LevelHeroes(LevelCycle, AutoClicker, ClickCountLvL)
 		}
        
         if(AutoProgress)
@@ -243,9 +243,10 @@ startMainLoop:
 		}
        
         i++
+		
        
     }
- 
+	
     return
 }
 ;===================================================================
@@ -256,16 +257,13 @@ EquipmentClicker()
     ControlClick, % "x" . (530*myW/defaultW) . " " . "y" (350*myH/defaultH), Ragnarok Clicker,, Left, 1, Na ;Click on Equipment
     Sleep, 500
     ControlClick, % "x" . (920*myW/defaultW) . " " . "y" (130*myH/defaultH), Ragnarok Clicker,, Left, 1, Na ;Click on X Equiment
-    sleep, 300
-	
+    sleep, 300	
 }
  
 Clicker(ClickCount)
  
 {  
 	ControlClick,% "x" . (864*myW/defaultW) . " " . "y" (420*myH/defaultH), Ragnarok Clicker,, Left, %ClickCount%,  NA
-	Sleep, 50
-
 }
  
  
@@ -276,121 +274,212 @@ ClickOBBLocations()
         ControlClick, % "x" . (525*myW/defaultW) . " " . "y" (485*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA        
         ControlClick, % "x" . (1050*myW/defaultW) . " " . "y" (440*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA        
         ControlClick, % "x" . (875*myW/defaultW) . " " . "y" (525*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA
-        ControlClick, % "x" . (750*myW/defaultW) . " " . "y" (375*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA
-		Sleep, 50
-        
+        ControlClick, % "x" . (750*myW/defaultW) . " " . "y" (375*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA      
 }
 
-LevelHeroes(LevelCycle, ClickCountLvL)
-{
-	
+LevelHeroes(LevelCycle, AutoClicker, ClickCountLvL)
+{	
 	if(i >= LevelCycle)
-        {			
-            ControlClick, % "x" . (45*myW/defaultW) . " " . "y" (125*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA  ; open upgradetab
-            Sleep, 50
-           
-            Loop, 10 ; Upgrades upgraden
-            {
-                ControlClick, % "x" . (75*myW/defaultW) . " " . "y" (420*myH/defaultH), Ragnarok Clicker,, WheelDown, 2 NA
-                Sleep, 75
-            }
-            ControlClick, % "x" . (364*myW/defaultW) . " " . "y" (600*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA  ; upgrades
-            Sleep, 75         
-           
-            Loop, 8 ; LVLUPS
-            {
-                ControlSend,, {q down}, Ragnarok Clicker               
-           
-               
-                ControlClick, % "x" . (75*myW/defaultW) . " " . "y" (460*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA
-                ControlClick, % "x" . (75*myW/defaultW) . " " . "y" (415*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA             
-                ControlClick, % "x" . (75*myW/defaultW) . " " . "y" (360*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA               
-                ControlClick, % "x" . (75*myW/defaultW) . " " . "y" (315*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA               
-                ControlClick, % "x" . (75*myW/defaultW) . " " . "y" (260*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA               
-                ControlClick, % "x" . (75*myW/defaultW) . " " . "y" (215*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA
-               
-                Clicker(ClickCountLvL)                
-				
-                Loop, 2
-                {
-                    ControlClick, % "x" . (75*myW/defaultW) . " " . "y" (420*myH/defaultH), Ragnarok Clicker,, WheelUp, 1 NA
-                    Sleep, 75
-                }
-               
-                ControlSend,, {q up}, Ragnarok Clicker
-                
-               
-            }
-            Loop, 10 ; Second time Upgrades upgraden
-            {
-                ControlClick, % "x" . (75*myW/defaultW) . " " . "y" (420*myH/defaultH), Ragnarok Clicker,, WheelDown, 2 NA
-                Sleep, 75
-            }
-            ControlClick, % "x" . (364*myW/defaultW) . " " . "y" (600*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA  ; upgrades
-           
-            i := 0
-		}	
-	return
+    {
+		pToken := Gdip_Startup()
 
+	
+		ControlClick, % "x" . (45*myW/defaultW) . " " . "y" (125*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA  ; open upgradetab
+		Sleep, 50
+		
+        
+		while Xscrolldown != 180
+		{
+			Loop, 10 ; scroll
+			{
+				ControlClick, % "x" . (75*myW/defaultW) . " " . "y" (420*myH/defaultH), Ragnarok Clicker,, WheelDown, 2 NA
+				Sleep, 75
+			}
+		
+			pBitmapHaystack := Gdip_BitmapFromHwnd(hwnd := WinExist("Ragnarok Clicker"))
+			Gdip_SaveBitmapToFile(pBitmapHaystack, "images\lvlscrolldowncontrol.png")
+			pBitmapNeedle := Gdip_CreateBitmapFromFile("images\lvlscrolldown.PNG")    
+			ControlClick, % "x" . (525*myW/defaultW) . " " . "y" (485*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA 
+			Gdip_Imagesearch(pBitmapHaystack, pBitmapNeedle, lvlscrolldowncoords,0,0,0,0,0,0,2)
+			out:=StrSplit(lvlscrolldowncoords,"`,")
+			Xscrolldown :=out[1]
+			Yscrolldown :=out[2]
+		;	FileAppend, %A_DD%.%A_MMMM% %A_Hour%:%A_Min%:%A_Sec% === %Xscrolldown% %Yscrolldown%`n, bug1.txt
+			Gdip_DisposeImage(pBitmapNeedle)
+					
+		}
+		
+		Xscrolldown := 0
+		
+		
+		pBitmapNeedle := Gdip_CreateBitmapFromFile("images\buyUpgrades.PNG")
+		ControlClick, % "x" . (525*myW/defaultW) . " " . "y" (485*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA 		
+		Gdip_Imagesearch(pBitmapHaystack, pBitmapNeedle, buyUpgradescoords,0,0,0,0,0,0,2)
+		out:=StrSplit(buyUpgradescoords,"`,")
+		Xupgrade :=out[1]
+		Yupgrade :=out[2]
+	
+		If ErrorLevel = 0
+		{			
+			ControlClick, x%Xupgrade% y%Yupgrade%, Ragnarok Clicker,, left, 1, NA
+			sleep, 50
+		}
+				
+		Gdip_DisposeImage(pBitmapHaystack)
+		Gdip_DisposeImage(pBitmapNeedle)      
+	
+		ControlSend,, {q down}, Ragnarok Clicker
+		while Xscrollup !=	332
+		{	
+					
+			Loop, 7
+			{
+				pBitmapHaystack := Gdip_BitmapFromHwnd(hwnd := WinExist("Ragnarok Clicker"))
+				Gdip_SaveBitmapToFile(pBitmapHaystack, "images\lvlupcontrol1.png")
+				pBitmapNeedle := Gdip_CreateBitmapFromFile("images\lvlupmax.PNG")    
+				ControlClick, % "x" . (525*myW/defaultW) . " " . "y" (485*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA 
+				Gdip_Imagesearch(pBitmapHaystack, pBitmapNeedle, lvlupcoords,0,0,0,0,0,0,2)
+				out:=StrSplit(lvlupcoords,"`,")
+				Xlvlup :=out[1]
+				Ylvlup :=out[2]
+			
+				Gdip_DisposeImage(pBitmapHaystack)
+				Gdip_DisposeImage(pBitmapNeedle)
+									
+				If ErrorLevel = 0
+				{			
+					
+					ControlClick, x%Xlvlup% y%Ylvlup%, Ragnarok Clicker,, left, 1, NA
+					sleep, 50
+				}
+			
+			 		 	
+			i := 0
+			}
+			
+			if (AutoClicker)
+			{
+				Clicker(ClickCountLvL)
+			}
+			
+			pBitmapHaystack := Gdip_BitmapFromHwnd(hwnd := WinExist("Ragnarok Clicker"))
+			Gdip_SaveBitmapToFile(pBitmapHaystack, "images\lvlscrollupcontrol.png")
+			pBitmapNeedle := Gdip_CreateBitmapFromFile("images\lvlscrollup.PNG")    
+			ControlClick, % "x" . (525*myW/defaultW) . " " . "y" (485*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA 
+			Gdip_Imagesearch(pBitmapHaystack, pBitmapNeedle, lvlscrollupcoords,0,0,0,0,0,0,2)
+			out:=StrSplit(lvlscrollupcoords,"`,")
+			Xscrollup :=out[1]
+			Yscrollup :=out[2]
+
+			Gdip_DisposeImage(pBitmapHaystack)
+			Gdip_DisposeImage(pBitmapNeedle)
+		
+			Loop, 2
+			{
+				ControlClick, % "x" . (75*myW/defaultW) . " " . "y" (420*myH/defaultH), Ragnarok Clicker,, WheelUp, 1 NA 
+			} 
+		}
+		ControlSend,, {q up}, Ragnarok Clicker 
+		Xscrollup := 0
+		
+		while Xscrolldown != 180
+		{
+			Loop, 10 ; scroll
+			{
+				ControlClick, % "x" . (75*myW/defaultW) . " " . "y" (420*myH/defaultH), Ragnarok Clicker,, WheelDown, 2 NA
+				Sleep, 75
+			}
+		
+			pBitmapHaystack := Gdip_BitmapFromHwnd(hwnd := WinExist("Ragnarok Clicker"))
+			pBitmapNeedle := Gdip_CreateBitmapFromFile("images\lvlscrolldown.PNG")  
+			ControlClick, % "x" . (525*myW/defaultW) . " " . "y" (485*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA 			
+			Gdip_Imagesearch(pBitmapHaystack, pBitmapNeedle, lvlscrolldowncoords,0,0,0,0,0,0,2)
+			out:=StrSplit(lvlscrolldowncoords,"`,")
+			Xscrolldown :=out[1]
+			Yscrolldown :=out[2]
+		;	FileAppend, %A_DD%.%A_MMMM% %A_Hour%:%A_Min%:%A_Sec% === %Xscrolldown% %Yscrolldown%`n, bug.txt
+			Gdip_DisposeImage(pBitmapNeedle)
+					
+		}	
+	
+		pBitmapNeedle := Gdip_CreateBitmapFromFile("images\buyUpgrades.PNG")    
+		ControlClick, % "x" . (525*myW/defaultW) . " " . "y" (485*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA 
+		Gdip_Imagesearch(pBitmapHaystack, pBitmapNeedle, buyUpgradescoords,0,0,0,0,0,0,2)
+		out:=StrSplit(buyUpgradescoords,"`,")
+		Xupgrade :=out[1]
+		Yupgrade :=out[2]
+;		MsgBox, %Xupgrade% %Yupgrade%
+		If ErrorLevel = 0
+		{				
+			ControlClick, x%Xupgrade% y%Yupgrade%, Ragnarok Clicker,, left, 1, NA
+			sleep, 50
+		}
+				
+		Gdip_DisposeImage(pBitmapHaystack)
+		Gdip_DisposeImage(pBitmapNeedle)   
+		Xscrolldown := 0
+		
+		Gdip_ShutDown(pToken)	
+
+	}
+		
+	return
 }
  
 EnableAutoProgress(AutoTranscendWall, UseDmgSkills)
-{
-	;MsgBox, k %k%
-    Sleep 50
-    CoordMode, Pixel, Window
-    PixelSearch, FoundX, FoundY, 1111*myW/defaultW, 230*myH/defaultH, 1122*myW/defaultW, 244*myH/defaultH, 0xFF0000, 0, Fast RGB
-    Sleep, 20
-   
-    if (ErrorLevel = 0 && k = 0)
+{	
+	
+	pToken := Gdip_Startup()
+	pBitmapHaystack := Gdip_BitmapFromHwnd(hwnd := WinExist("Ragnarok Clicker"))
+	Gdip_SaveBitmapToFile(pBitmapHaystack, "images\farmcontrol1.png")
+    pBitmapNeedle := Gdip_CreateBitmapFromFile("images\farmmode.PNG")    
+	Gdip_Imagesearch(pBitmapHaystack, pBitmapNeedle, farmmodecoords,0,0,0,0,0,0,2)
+	out:=StrSplit(farmmodecoords,"`,")
+	Xfarmmode :=out[1]
+	Yfarmmode :=out[2]
+	Gdip_DisposeImage(pBitmapHaystack)
+	Gdip_DisposeImage(pBitmapNeedle)
+	Gdip_ShutDown(pToken)
+					
+    if (Xfarmmode > 0 && k = 0)
     {
         StartTime := A_TickCount
         ;MsgBox, StartTime ist %StartTime%      ; for script development
     }
    
-    if(ErrorLevel = 0)
-    {
-        ControlSend,, A, Ragnarok Clicker
-        k++
-    }
+  	If (Xfarmmode > 0 )
+	{						
+		ControlClick, x%Xfarmmode% y%Yfarmmode%, Ragnarok Clicker,, left, 1, NA
+		sleep, 50
+		k++						
+	}
+
    
-    if (ErrorLevel = 0 && k != 0)
+    if (Xfarmmode > 0  && k != 0)
     {
         Sleep, 20
-        ElapsedTime := A_TickCount - StartTime
-        ;MsgBox, Elaspsedtime is %ElapsedTime%      ; for script development
-        
+        ElapsedTime := A_TickCount - StartTime        
                
         if (UseDmgSkills)
         {
             ControlSend,, 123879, Ragnarok Clicker
-			ControlClick,% "x" . (864*myW/defaultW) . " " . "y" (420*myH/defaultH), Ragnarok Clicker,, Left, 200,  NA
-
+			ControlClick,% "x" . (864*myW/defaultW) . " " . "y" (420*myH/defaultH), Ragnarok Clicker,, Left, 300,  NA
        
         }
 	       
 	return
     }
        
-   
-	;MsgBox, % (ElapsedTime/1000) .  " seconds" ; for script development
+
     if(ElapsedTime > 300000 )
     {
-		;MsgBox, AutoTrans %AutoTranscend%
 		if(AutoTranscendWall)
 		{
 		EnableAutoTranscendWall()
 		}
 
     return
-    }  
-       
-    if (ErrorLevel != 0)
-    {
-        return
-    }
-   
-   
+    } 
    
  
     return
@@ -400,28 +489,33 @@ EnableAutoTranscendWall()
 {	
 	
 	if(ElapsedTime/k < 150000)
-        {
+    {	
+		pToken := Gdip_Startup()
+		pBitmapHaystack := Gdip_BitmapFromHwnd(hwnd := WinExist("Ragnarok Clicker"))
+		Gdip_SaveBitmapToFile(pBitmapHaystack, "images\lastAutotranscend.png")
+		Gdip_DisposeImage(pBitmapHaystack)
+		Gdip_ShutDown(pToken)
+        ControlClick, % "x" . (320*myW/defaultW) . " " . "y" (130*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA ; equiment tap
+        sleep, 3000
+        
+		ControlClick, % "x" . (272*myW/defaultW) . " " . "y" (484*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA ; Salvage         
+        sleep, 3000
+        ControlClick, % "x" . (494*myW/defaultW) . " " . "y" (430*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA ; Salvage  "yes"      
+        sleep, 3000
+        ControlClick, % "x" . (1120*myW/defaultW) . " " . "y" (280*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA ; Transcend button
+        sleep, 3000
+        ControlClick, % "x" . (500*myW/defaultW) . " " . "y" (500*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA ; Transcend "yes"
+        sleep, 3000
+		FileAppend, %A_DD%.%A_MMMM% %A_Hour%:%A_Min%:%A_Sec% === Last autoTranscendWall`n, autoTranscendLog.txt
 			
-            ControlClick, % "x" . (320*myW/defaultW) . " " . "y" (130*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA ; equiment tap
-            sleep, 3000
-            ControlClick, % "x" . (272*myW/defaultW) . " " . "y" (484*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA ; Salvage         
-            sleep, 3000
-            ControlClick, % "x" . (494*myW/defaultW) . " " . "y" (430*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA ; Salvage  "yes"      
-            sleep, 3000
-            ControlClick, % "x" . (1120*myW/defaultW) . " " . "y" (280*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA ; Transcend button
-            sleep, 3000
-            ControlClick, % "x" . (500*myW/defaultW) . " " . "y" (500*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA ; Transcend "yes"
-            sleep, 3000
-			FileAppend, %A_DD%.%A_MMMM% %A_Hour%:%A_Min%:%A_Sec% === Last autoTranscend`n, autoTranscendLog.txt
+		ControlSend,, A, Ragnarok Clicker
 			
-			ControlSend,, A, Ragnarok Clicker
-			
-			loop, 10
-			{
+		loop, 10
+		{
 			ControlClick,% "x" . (864*myW/defaultW) . " " . "y" (420*myH/defaultH), Ragnarok Clicker,, Left, 5,  NA
 			Sleep, 100
-			}
-	   }
+		}
+	}
 		
     ElapsedTime := 0
     k := 0
@@ -436,22 +530,24 @@ EnableAutoTranscendTime(TranscendTimer)
 {	
 	
 	if(l = 0)
-	{
-		
+	{		
 		StartTranscendTimer := A_TickCount
 		l++
 	}
 
 	if(l > 0)
 	{		
-		ElapsedTranscendTimer := (A_TickCount - StartTranscendTimer)/60000
-		
+		ElapsedTranscendTimer := (A_TickCount - StartTranscendTimer)/60000	
 	}
 	
 	
 	If(ElapsedTranscendTimer > TranscendTimer)
 	{
-		;MsgBox, transcend
+		pToken := Gdip_Startup()
+		pBitmapHaystack := Gdip_BitmapFromHwnd(hwnd := WinExist("Ragnarok Clicker"))
+		Gdip_SaveBitmapToFile(pBitmapHaystack, "images\lastAutotranscend.png")
+		Gdip_DisposeImage(pBitmapHaystack)
+		Gdip_ShutDown(pToken)
         ControlClick, % "x" . (320*myW/defaultW) . " " . "y" (130*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA ; equiment tap
         sleep, 3000
         ControlClick, % "x" . (272*myW/defaultW) . " " . "y" (484*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA ; Salvage         
@@ -462,7 +558,7 @@ EnableAutoTranscendTime(TranscendTimer)
         sleep, 3000
         ControlClick, % "x" . (500*myW/defaultW) . " " . "y" (500*myH/defaultH), Ragnarok Clicker,, Left, 1,  NA ; Transcend "yes"
         sleep, 3000
-		FileAppend, %A_DD%.%A_MMMM% %A_Hour%:%A_Min%:%A_Sec% === Last autoTranscend`n, autoTranscendLog.txt
+		FileAppend, %A_DD%.%A_MMMM% %A_Hour%:%A_Min%:%A_Sec% === Last autoTranscendTimer`n, autoTranscendLog.txt
 		l := 0
 		ControlSend,, A, Ragnarok Clicker
 		
@@ -472,29 +568,18 @@ EnableAutoTranscendTime(TranscendTimer)
 		Sleep, 100
 		}	
 	}
-	
-	
-	
-	
 return	 
 }
  
 EnableSkills()
 {
  
-ControlSend,, 456, Ragnarok Clicker
-ControlClick,% "x" . (864*myW/defaultW) . " " . "y" (420*myH/defaultH), Ragnarok Clicker,, Left, 200,  NA
+	ControlSend,, 456, Ragnarok Clicker
+	ControlClick,% "x" . (864*myW/defaultW) . " " . "y" (420*myH/defaultH), Ragnarok Clicker,, Left, ClickCount,  NA
 
  
 return
 }
  
- 
-DisplayOptionsValue()
-{
-    TrayTip, Options State
-    , DOnROns Ragnarok-Clicker`n[F7 to start] [F8 to stop]`n[F10 to exit script]`nHeroes leveling[F1]: %autoLevelHeroes%`nAutoprogress[F2]: %autoProgress%`nuseDmgSkills[F3]: %useDmgSkills%`nautoTranscend[F6]: %autoTranscend%`nlvlupDelay[F4-/F5+]: %lvlupDelay%`n
-    , 10, 33
-}
 
-    ; ================================================================================================================
+ ;================================================================================================================
