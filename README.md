@@ -2,6 +2,8 @@
 AHK BOT Active-Build for Ragnarok Clicker
 Latest version 0.3 released on 12.9.2016
 
+Thanks to [TUF]DR4LUC0N for beta testing and suggestions.
+
 ## Overview
 
 * [How-to install](#how-to-install)
