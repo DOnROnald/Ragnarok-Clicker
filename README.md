@@ -1,6 +1,6 @@
 # Ragnarok-Clicker
 AHK BOT Active-Build for Ragnarok Clicker
-Latest version 0.11 released on 13.8.2016
+Latest version 0.3 released on 12.9.2016
 
 ## Overview
 
@@ -24,7 +24,7 @@ Latest version 0.11 released on 13.8.2016
 
 **2.** Download and install latest version of [AutoHotkey][]
 
-**3.** download latest bot version as a zip file.(green button on the right[clone or download])
+**3.** download latest bot version as a zip file(including the image folder and gdip_all.ahk).(green button on the right[clone or download])
 
 **4.** extract the zip file to your desire location.
 
@@ -34,11 +34,10 @@ Latest version 0.11 released on 13.8.2016
 
 This should do it the bot is ready to rumble.
 
-## Different Windowsize
+## Windowsize changed since v0.3
 
-If you want to change the windowsize.
-Change it in a way that there are no black bars.
-Then open the Bot. Otherwise the clicklocation will be wrong.
+i implemented some imagesearch for Lvlup process. for this to work you can no longer change the windowsize from the default.
+but now the script works id the window is behind other windows(BUT not minimized)
 
 
 ## Requirements
@@ -54,7 +53,7 @@ button unlocked
  * Automatically levels heroes(frequenzy adjustable)
  * Automatically uses ZenySkills and mammonite
  * Automatically accept equiment drop from mob
- * AutoProgress: ONLY FUNCTIONAL IF Ragnarok Clicker WINDOW IS IN FOCUS!
+ * AutoProgress: ONLY FUNCTIONAL IF Ragnarok Clicker is not minimized
 					checks every so often if you are in progressmode if not
 					it activates progressmode.(For this to work )
 					
@@ -65,7 +64,10 @@ button unlocked
 			ASCENDING
 			 is activated it ckecks if you have hit a wall in
 			 progression aka switch back to farmmode more than 2 times in 5 mins.
+ * AutoTranscend Timer
+ * Screenshot of last autoTranscend
  * Saves settings into .ini file
+ 
 ##Hotkeys
 
 * Since Version 0.2 no more Hotkeys 
@@ -80,6 +82,14 @@ button unlocked
 	remedy this.
 
 ## Changelog
+
+* 12.9.16 v0.3
+	- Added functionality for inactive window
+	- Added Screenshot of last autoTranscend
+	- Optimized Lvlup
+	- Implemented Lvlup functionality for late game
+	
+
 *18.8.26 v.0.22
 - added 100 Auto-Clicks after AutoTranscension(so that Idle-Build transcension works.)
 - Changed autoTranscensionWall conditions to 3 times Farmmode-detections in 5 mins.
@@ -108,15 +118,12 @@ button unlocked
 
 ##To Do
 
-- Transcend Timer(adjustable)
-- further LvLUP Optimization
-- Optimization for higher lvl runs
+- AutoRaid
+- 
 
 ## Maybe future features
 
-- Mercs automation
-- SKillPoring clicker
-- Rebirth heroe Clicker
+
 
 
 
