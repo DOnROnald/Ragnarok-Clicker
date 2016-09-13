@@ -93,7 +93,7 @@ global Stop := 0
 global ClickCountLvL := 0
 global l := 0
 global StartTranscendTimer := 0
-global lvlupimage = "C:\1Daten\ahk\ragnarok clicker\lvlupmax.PNG"
+
 
 
 WinGetPos,,, WinW, WinH, ahk_exe Ragnarok Clicker.exe
